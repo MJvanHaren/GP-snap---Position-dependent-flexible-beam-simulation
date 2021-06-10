@@ -3,42 +3,52 @@ addpath('functions');
 SetPlotLatexStyle;
 %% inputs
 x0 = 75;
-qf = 5e-3;
 Ts = 1e-3;
 
 n=30;
-N_trial = 3;
+N_trial = 6;
 beamElements = 1;
-[ty,ddy] = make4(qf,1e-3,5e-3,5e-2,2e0,Ts);
+[ty,ddy] = make4(5e-4,1e-3,1e-2,2.5e-1,2e1,Ts); % good choice: 5e-4,1e-3,1e-2,2.5e-1,2e1
 [~,t,s,j,a,v,r,~] = profile4(ty,ddy(1),Ts);
-% t = 0:Ts:3;
-% r=sin(100*t)';
-% a = -100^2*sin(100*t)';
 
-% figure
-% subplot(2,3,1)
-% plot(v);
-% subplot(2,3,2)
-% plot(a);
-% subplot(2,3,3)
-% plot(j);
-% subplot(2,3,4)
-% plot(s);
-% subplot(2,3,5)
-% plot(r);
+figure
+subplot(2,3,1)
+plot(t,r);
+xlabel('Time [s]');
+ylabel('Reference [$m$]');
+subplot(2,3,2)
+plot(t,v);
+xlabel('Time [s]')
+ylabel('Velocity [$m/s$]')
+subplot(2,3,3)
+plot(t,a);
+xlabel('Time [s]')
+ylabel('Acceleration [$m/s^2$]')
+subplot(2,3,4)
+plot(t,j);
+xlabel('Time [s]')
+ylabel('Jerk [$m/s^3$]')
+subplot(2,3,5)
+plot(t,s);
+xlabel('Time [s]')
+ylabel('Sanp [$m/s^4$]')
 
-N2 = 2^12;% for fft
-f = 1/Ts*(0:(N2/2))/N2;
-r_fft=fft(r,N2);
-P2 = abs(r_fft/N2);
-specContent = P2(1:N2/2+1);
-specContent(2:end-1) = 2*specContent(2:end-1);
-subplot(2,3,6)
-semilogx(f,specContent);
-grid on; xlabel('Frequency [Hz]');
 
 N = length(t);
 Tend = t(end);
+
+N2 = 2^16;% for fft
+f = 1/Ts*(0:(N2/2))/N2;
+a_fft=fft(a,N2);
+P2 = abs(a_fft/N2);
+specContent = P2(1:N2/2+1);
+specContent(2:end-1) = 2*specContent(2:end-1);
+subplot(2,3,6)
+semilogx(f,20*log10(specContent));
+grid on; xlabel('Frequency [Hz]');
+
+
+
 %% system
 load FBcontroller_09062021
 sys = c2d(shapeit_data.P.sys,Ts);
@@ -50,7 +60,7 @@ Wf          = eye(N)*1e-10;
 WDf         = eye(N)*0e-1;
 %% BF
 
-Psi = [r a];
+Psi = [r v a j];
 npsi = size(Psi,2);
 JPsi = zeros(N,npsi);
 
