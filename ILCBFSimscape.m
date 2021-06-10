@@ -1,4 +1,4 @@
-function [theta_jplus1,e_j] = ILCBFSimscape(POI,l)
+function [theta_jplus1,e_j] = ILCBFSimscape(POI,l,Ts,N_trial)
 close all;
 %% inputs
 if POI < l/2 && POI > 0
@@ -11,10 +11,8 @@ else
     error('Not good POI measurement!')
 end
 
-Ts = 1e-3;
-
 n=30;
-N_trial = 6;
+
 beamElements = 1;
 [ty,ddy] = make4(5e-4,1e-3,1e-2,2.5e-1,2e1,Ts); % good choice: 5e-4,1e-3,1e-2,2.5e-1,2e1
 [~,t,s,j,a,v,r,~] = profile4(ty,ddy(1),Ts);
