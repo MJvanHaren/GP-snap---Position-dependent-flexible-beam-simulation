@@ -9,11 +9,11 @@ Ts = 1e-3;
 n=30;
 N_trial = 3;
 beamElements = 1;
-% [ty,ddy] = make4(qf,1e-3,5e-3,5e-2,2e0,Ts);
-% [~,t,s,j,a,v,r,~] = profile4(ty,ddy(1),Ts);
-t = 0:Ts:3;
-r=sin(100*t)';
-a = -100^2*sin(100*t)';
+[ty,ddy] = make4(qf,1e-3,5e-3,5e-2,2e0,Ts);
+[~,t,s,j,a,v,r,~] = profile4(ty,ddy(1),Ts);
+% t = 0:Ts:3;
+% r=sin(100*t)';
+% a = -100^2*sin(100*t)';
 
 % figure
 % subplot(2,3,1)
