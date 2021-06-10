@@ -23,7 +23,7 @@ end
 startup;
 
 hypGuessMatrix = [5e0 log(mean(abs(y(1,:)))) log(1e-1);
-    5e0 log(10) log(1e-1);
+    5e0 log(1e-1) log(1e-2);
     5e0 log(mean(abs(y(3,:)))) log(1e-1);
     5e0 log(mean(abs(y(4,:)))) log(1e-1);
     5e0 -15 log(1e-1)];
