@@ -1,4 +1,4 @@
-function [theta_jplus1,e_j] = ILCBFSimscape(POI,l,Ts,N_trial)
+function [theta_jplus1,e_j] = ILCBFSimscape(POI,l,Ts,N_trial,theta0)
 close all;
 %% inputs
 if POI < l/2 && POI > 0
@@ -80,7 +80,7 @@ Q = Rinv*(JPsi.'*We*JPsi+Psi.'*WDf*Psi);
 L = Rinv*(JPsi.'*We);
 
 %% init ILC with BF
-theta_jplus1 = zeros(npsi,1);
+theta_jplus1 = theta0;
 f_jplus1 = Psi*theta_jplus1;
 %% initialize plotting and storage for ILC
 PlotTrialData;
