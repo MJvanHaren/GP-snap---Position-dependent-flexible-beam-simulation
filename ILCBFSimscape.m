@@ -1,5 +1,7 @@
 function [theta_jplus1,e_j] = ILCBFSimscape(POI,l,Ts,N_trial,theta0,r,Psi,t)
-close all;
+if ishandle(1)
+    close(1);
+end
 %% inputs
 if POI < l/2 && POI > 0
     x0 = POI;
