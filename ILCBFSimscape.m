@@ -1,4 +1,4 @@
-function [theta_jplus1,e_j] = ILCBFSimscape(POI,l,Ts,N_trial,theta0)
+function [theta_jplus1,e_j] = ILCBFSimscape(POI,l,Ts,N_trial,theta0,r,Psi,t)
 close all;
 %% inputs
 if POI < l/2 && POI > 0
@@ -14,8 +14,6 @@ end
 n=30;
 
 beamElements = 1;
-[ty,ddy] = make4(5e-4,1e-3,1e-2,2.5e-1,2e1,Ts); % good choice: 5e-4,1e-3,1e-2,2.5e-1,2e1
-[~,t,s,j,a,v,r,~] = profile4(ty,ddy(1),Ts);
 N = length(t);
 Tend = t(end);
 
@@ -50,7 +48,15 @@ Tend = t(end);
 % semilogx(f,20*log10(specContent));
 % grid on; xlabel('Frequency [Hz]');
 %% system
-load FBcontroller_09062021
+if true
+    G = ss(ModelFlexibleBeamFirstPrinciple(POI));
+    load FBcontroller_11062021th05_firstPrinciplesBeam
+elseif false
+    G = ss(ModelFlexibleBeamFirstPrinciple(POI));
+    load FBcontroller_11062021_firstPrinciplesBeam
+else
+    load FBcontroller_09062021
+end
 sys = c2d(shapeit_data.P.sys,Ts);
 controller = d2d(ss(shapeit_data.C_tf_z),Ts);
 PS = feedback(sys,controller,-1);
@@ -60,7 +66,7 @@ Wf          = eye(N)*0e-10;
 WDf         = eye(N)*0e-1;
 %% BF
 
-Psi = [r v a j s];
+% Psi = [a s];
 npsi = size(Psi,2);
 JPsi = zeros(N,npsi);
 

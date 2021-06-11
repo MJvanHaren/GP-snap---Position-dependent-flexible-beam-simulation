@@ -2,11 +2,21 @@ clear all; close all; clc;
 addpath('functions');
 SetPlotLatexStyle;
 %% inputs
-x0 = 75;
 Ts = 5e-4;
 Tend = 5;
 t = 0:Ts:Tend;
 N = length(t);
+l = 500;
+POI = 250;
+if POI < l/2 && POI > 0
+    x0 = POI;
+elseif POI > l/2 && POI < l
+    x0 = POI-l/2;
+elseif POI == l/2 || POI == 0 || POI == l
+    x0 = l/4;
+else
+    error('Not good POI measurement!')
+end
 n=30;
 beamElements = 1;
 %% signals
@@ -20,7 +30,7 @@ systemIdentification;
 
 %% TF estimate
 nfs = 2048*2;
-wind = kaiser((N-1)/4,10);
+wind = kaiser((N-1)/6,10);
 [FRFPOI,~] =tfestimate(input,output(:,4),wind,[],nfs,1/Ts);
 [FRFMID,ft] =tfestimate(input,output(:,2),wind,[],nfs,1/Ts);
 
