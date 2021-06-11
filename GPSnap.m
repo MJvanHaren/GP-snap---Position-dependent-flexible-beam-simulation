@@ -4,14 +4,14 @@ SetPlotLatexStyle;
 %% constants
 l = 500; %mm
 delta = 10;
-n = 6;
+n = 5;
 n_s = 200;
 Ts = 1e-3;
 N_trial = 6;
 %% inputs
 X = linspace(delta,l-delta,n)'; % Training inputs
 X_s = linspace(0,l,n_s)'; % Test inputs (for visualization)
-Xtest = [68 248 310 470]'; %mm
+Xtest = [68 150 380 470]'; %mm 68 248 310 47
 ntest = length(Xtest);
 %% ref + basis
 [ty,ddy] = make4(5e-4,1e-3,1e-2,2.5e-1,2e1,Ts); % good choice: 5e-4,1e-3,1e-2,2.5e-1,2e1
@@ -56,7 +56,7 @@ eNormConstant = eNormGP;
 for i = 1:ntest
       [~,eGP(:,i)] = ILCBFSimscape(Xtest(i),l,Ts,1,thetaTest(:,i),r,Psi,t);
       eNormGP(i) = norm(eGP(:,i),2);
-      [~,eConstant(:,i)] = ILCBFSimscape(Xtest(i),l,Ts,1,mean(y,2),r,Psi,t);
+      [~,eConstant(:,i)] = ILCBFSimscape(Xtest(i),l,Ts,1,y(:,find(X==l/2)),r,Psi,t);
       eNormConstant(i) = norm(eConstant(:,i),2);
 end
 %% visualization

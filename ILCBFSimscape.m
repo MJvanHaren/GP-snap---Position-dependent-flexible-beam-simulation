@@ -48,10 +48,10 @@ Tend = t(end);
 % semilogx(f,20*log10(specContent));
 % grid on; xlabel('Frequency [Hz]');
 %% system
-if true
+if false
     G = ss(ModelFlexibleBeamFirstPrinciple(POI));
     load FBcontroller_11062021th05_firstPrinciplesBeam
-elseif false
+elseif true
     G = ss(ModelFlexibleBeamFirstPrinciple(POI));
     load FBcontroller_11062021_firstPrinciplesBeam
 else
