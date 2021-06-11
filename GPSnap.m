@@ -31,7 +31,7 @@ Y = y(end,:)';
 meanfunc = [];
 covfunc = @covSEiso;              % Squared Exponental covariance function
 likfunc = @likGauss;              % Gaussian likelihood
-hypGuess = struct('mean',[], 'cov', [5e0 log(mean(abs(Y)))], 'lik', log(1e-7));
+hypGuess = struct('mean',[], 'cov', [5e0 log(mean(abs(Y)))], 'lik', log(1e-9));
 hypOpt = minimize(hypGuess, @gp, -100, @infGaussLik, meanfunc, covfunc, likfunc, X, Y); % optimize hyperparameters
 [mu, s2] = gp(hypOpt, @infGaussLik, meanfunc, covfunc, likfunc, X, Y, X_s);
 

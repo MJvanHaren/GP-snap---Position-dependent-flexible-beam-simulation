@@ -16,6 +16,8 @@ mass = L*W*Th*Ro;                                                           % [k
 s = tf('s');
 G = 1/(mass*s^2);
 for r = 1:2:HMMS
-    G = G+((Xnx(r,Ix)-1))/(mass*(s^2+2*betaN(r)*s)+(fn(r)*2*pi)^2);
+    G = G+((Xnx(r,Ix)-1))/(mass*(s^2+2*betaN(r)*s+(fn(r)*2*pi)^2));
 end
 end
+
+% 
