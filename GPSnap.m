@@ -11,12 +11,12 @@ N_trial = 6;
 %% inputs
 X = linspace(delta,l-delta,n)'; % Training inputs
 X_s = linspace(0,l,n_s)'; % Test inputs (for visualization)
-Xtest = [68 248 310 470]';
+Xtest = [68 248 310 470]'; %mm
 ntest = length(Xtest);
 %% ref + basis
 [ty,ddy] = make4(5e-4,1e-3,1e-2,2.5e-1,2e1,Ts); % good choice: 5e-4,1e-3,1e-2,2.5e-1,2e1
 [~,t,s,j,a,v,r,~] = profile4(ty,ddy(1),Ts);
-Psi = [v a s];
+Psi = [a s];
 npsi = size(Psi,2);
 theta0 = zeros(npsi,1);
 %% perform ILCBF multiple time for snap parameter
@@ -35,7 +35,7 @@ hypGuess = struct('mean',[], 'cov', [5e0 log(mean(abs(Y)))], 'lik', log(1e-7));
 hypOpt = minimize(hypGuess, @gp, -100, @infGaussLik, meanfunc, covfunc, likfunc, X, Y); % optimize hyperparameters
 [mu, s2] = gp(hypOpt, @infGaussLik, meanfunc, covfunc, likfunc, X, Y, X_s);
 
-figure(1+i);clf;
+figure(2);clf;
 f = [mu+2*sqrt(s2); flipdim(mu-2*sqrt(s2),1)];
 fill([X_s; flipdim(X_s,1)], f, [7 7 7]/8)
 hold on; plot(X_s, mu,'Linewidth',2); plot(X, Y, '+','Markersize',17,'Linewidth',1.3);
@@ -60,7 +60,7 @@ for i = 1:ntest
       eNormConstant(i) = norm(eConstant(:,i),2);
 end
 %% visualization
-figure
+figure(3);clf;
 semilogy(eNormGP,'s--','Markersize',15,'Linewidth',1.3)
 hold on
 semilogy(eNormConstant,'^--','Markersize',15,'Linewidth',1.3)
