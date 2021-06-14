@@ -11,7 +11,7 @@ N_trial = 6;
 %% inputs
 X = linspace(delta,l-delta,n)'; % Training inputs
 X_s = linspace(0,l,n_s)'; % Test inputs (for visualization)
-Xtest = [68 150 380 470]'; %mm 68 248 310 47
+Xtest = [30 110 180 248 380 445]'; %mm 68 248 310 47
 ntest = length(Xtest);
 %% ref + basis
 [ty,ddy] = make4(5e-4,1e-3,1e-2,2.5e-1,2e1,Ts); % good choice: 5e-4,1e-3,1e-2,2.5e-1,2e1
@@ -61,9 +61,10 @@ for i = 1:ntest
 end
 %% visualization
 figure(3);clf;
-semilogy(eNormGP,'s--','Markersize',15,'Linewidth',1.3)
+semilogy(Xtest,eNormGP,'s--','Markersize',15,'Linewidth',1.3)
 hold on
-semilogy(eNormConstant,'^--','Markersize',15,'Linewidth',1.3)
-xlabel('Test Position Number [-]');
-ylabel('$\|e\|_2 \; [m]$');
-legend('GP Snap','No Position-Dependent feedforward');
+semilogy(Xtest,eNormConstant,'^--','Markersize',15,'Linewidth',1.3)
+xlabel('Scheduling Variable $\rho$ [$mm$]');
+ylabel('$\|e\|_2$ [$m$]');
+legend('GP Snap Feefdorward','Position-Independent Feedforward');
+% ylim([3.8e-6 8.92e-6])
