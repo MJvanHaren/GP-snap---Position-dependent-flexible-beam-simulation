@@ -19,44 +19,16 @@ beamElements = 1;
 N = length(t);
 Tend = t(end);
 
-% figure
-% subplot(2,3,1)
-% plot(t,r);
-% xlabel('Time [s]');
-% ylabel('Reference [$m$]');
-% subplot(2,3,2)
-% plot(t,v);
-% xlabel('Time [s]')
-% ylabel('Velocity [$m/s$]')
-% subplot(2,3,3)
-% plot(t,a);
-% xlabel('Time [s]')
-% ylabel('Acceleration [$m/s^2$]')
-% subplot(2,3,4)
-% plot(t,j);
-% xlabel('Time [s]')
-% ylabel('Jerk [$m/s^3$]')
-% subplot(2,3,5)
-% plot(t,s);
-% xlabel('Time [s]')
-% ylabel('Sanp [$m/s^4$]')
-% N2 = 2^16;% for fft
-% f = 1/Ts*(0:(N2/2))/N2;
-% a_fft=fft(a,N2);
-% P2 = abs(a_fft/N2);
-% specContent = P2(1:N2/2+1);
-% specContent(2:end-1) = 2*specContent(2:end-1);
-% subplot(2,3,6)
-% semilogx(f,20*log10(specContent));
-% grid on; xlabel('Frequency [Hz]');
+
 %% system
 if true
-    G = ss(ModelFlexibleBeamFirstPrinciple(POI));
+    G = ss(ModelFlexibleBeamFirstPrinciple(POI)); % model for simulation
     load FBcontroller_firstPrinciplesBeam
 else
     load FBcontroller_09062021
 end
-sys = c2d(shapeit_data.P.sys,Ts);
+sys = c2d(shapeit_data.P.sys,Ts); % model for ILCBF
+% sys = c2d(G,Ts);
 controller = d2d(ss(shapeit_data.C_tf_z),Ts);
 PS = feedback(sys,controller,-1);
 %% weighting

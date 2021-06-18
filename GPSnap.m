@@ -6,12 +6,12 @@ l = 500; %mm
 delta = 10;
 n = 5;
 n_s = 200;
-Ts = 1e-3;
-N_trial = 6;
+Ts = 1e-3;í
+N_trial = 8;
 %% inputs
 X = linspace(delta,l-delta,n)'; % Training inputs
 X_s = linspace(0,l,n_s)'; % Test inputs (for visualization)
-Xtest = [30 110 180 248 380 445]'; %mm 68 248 310 47
+Xtest = [30 110 180 248 380 445]'; % mm
 ntest = length(Xtest);
 %% ref + basis
 [ty,ddy] = make4(5e-4,1e-3,1e-2,2.5e-1,2e1,Ts); % good choice: 5e-4,1e-3,1e-2,2.5e-1,2e1
@@ -19,10 +19,37 @@ ntest = length(Xtest);
 Psi = [a s];
 npsi = size(Psi,2);
 theta0 = zeros(npsi,1);
+if true
+    figure
+    subplot(2,3,1)
+    plot(t,r);
+    xlabel('Time [s]');ylabel('Reference [$m$]');
+    subplot(2,3,2)
+    plot(t,v);
+    xlabel('Time [s]');ylabel('Velocity [$m/s$]');
+    subplot(2,3,3);
+    plot(t,a);
+    xlabel('Time [s]');ylabel('Acceleration [$m/s^2$]');
+    subplot(2,3,4)
+    plot(t,j);
+    xlabel('Time [s]');ylabel('Jerk [$m/s^3$]');
+    subplot(2,3,5)
+    plot(t,s);
+    xlabel('Time [s]');ylabel('Sanp [$m/s^4$]');
+    N2 = 2^16;% for fft
+    f = 1/Ts*(0:(N2/2))/N2;
+    a_fft=fft(a,N2);
+    P2 = abs(a_fft/N2);
+    specContent = P2(1:N2/2+1);
+    specContent(2:end-1) = 2*specContent(2:end-1);
+    subplot(2,3,6)
+    semilogx(f,20*log10(specContent));
+    grid on; xlabel('Frequency [Hz]');
+end
 %% perform ILCBF multiple time for snap parameter
 y = zeros(npsi,n);
 for i = 1:n
-        [y(:,i),e_j] = ILCBFSimscape(X(i),l,Ts,N_trial,theta0,r,Psi,t);
+    [y(:,i),e_j] = ILCBFSimscape(X(i),l,Ts,N_trial,theta0,r,Psi,t);
 end
 %% GP
 startup;
@@ -54,10 +81,10 @@ eNormGP = zeros(ntest,1);
 eNormConstant = eNormGP;
 
 for i = 1:ntest
-      [~,eGP(:,i)] = ILCBFSimscape(Xtest(i),l,Ts,1,thetaTest(:,i),r,Psi,t);
-      eNormGP(i) = norm(eGP(:,i),2);
-      [~,eConstant(:,i)] = ILCBFSimscape(Xtest(i),l,Ts,1,y(:,find(X==l/2)),r,Psi,t);
-      eNormConstant(i) = norm(eConstant(:,i),2);
+    [~,eGP(:,i)] = ILCBFSimscape(Xtest(i),l,Ts,1,thetaTest(:,i),r,Psi,t);
+    eNormGP(i) = norm(eGP(:,i),2);
+    [~,eConstant(:,i)] = ILCBFSimscape(Xtest(i),l,Ts,1,y(:,find(X==l/2)),r,Psi,t);
+    eNormConstant(i) = norm(eConstant(:,i),2);
 end
 %% visualization
 figure(3);clf;

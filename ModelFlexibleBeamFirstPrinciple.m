@@ -1,9 +1,9 @@
 function [G] = ModelFlexibleBeamFirstPrinciple(Ix)
 addpath('functions');
-SetPlotLatexStyle;
+% SetPlotLatexStyle;
 %% definitions
 L = 0.5;                                                                    % [m], length of free-free beam
-W =40e-3;                                                                  % [m], width (or height) of free-free beam
+W = 40e-3;                                                                  % [m], width (or height) of free-free beam
 Th = 1e-3;%2e-3;                                                            % [m], thickness of free-free beam
 E = 2.1e11;                                                                 % [Pa], young's modulus of material (steel)
 Ro = 7850;                                                                  % [Kg/m^3], density of material (steel)
