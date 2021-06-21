@@ -3,13 +3,13 @@ addpath(genpath('functions'));
 SetPlotLatexStyle;
 %% constants
 l = 500; %mm
-delta = 10;
+delta = 10; % plz >1
 n = 5;
 n_s = 200;
-Ts = 1e-3;í
-N_trial = 8;
+Ts = 1e-3;
+N_trial = 6;
 %% inputs
-X = linspace(delta,l-delta,n)'; % Training inputs
+X = round(linspace(delta,l-delta,n)'); % Training inputs
 X_s = linspace(0,l,n_s)'; % Test inputs (for visualization)
 Xtest = [30 110 180 248 380 445]'; % mm
 ntest = length(Xtest);
@@ -73,7 +73,7 @@ ylabel('Snap feedforward parameter [$kg/s^2$]')
 %% estimate on new position
 
 [thetaSnapTest, ~] = gp(hypOpt, @infGaussLik, meanfunc, covfunc, likfunc, X, Y, Xtest);
-thetaTest = [repmat(mean(y(1:end-1,:),2),1,ntest);thetaSnapTest'];
+thetaTest = [repmat(y(1:end-1,find(X==l/2)),1,ntest);thetaSnapTest'];
 %% test on new position
 eGP = zeros(length(e_j),ntest);
 eConstant = eGP;

@@ -23,21 +23,19 @@ Tend = t(end);
 %% system
 if true
     G = ss(ModelFlexibleBeamFirstPrinciple(POI)); % model for simulation
-    load FBcontroller_firstPrinciplesBeam
+    load FBcontroller_firstPrinciplesBeam2
 else
     load FBcontroller_09062021
 end
 sys = c2d(shapeit_data.P.sys,Ts); % model for ILCBF
-% sys = c2d(G,Ts);
 controller = d2d(ss(shapeit_data.C_tf_z),Ts);
 PS = feedback(sys,controller,-1);
 %% weighting
 We          = eye(N)*1e6;
-Wf          = eye(N)*0e-10;
+Wf          = eye(N)*0e3;
 WDf         = eye(N)*0e-1;
 %% BF
 
-% Psi = [a s];
 npsi = size(Psi,2);
 JPsi = zeros(N,npsi);
 
