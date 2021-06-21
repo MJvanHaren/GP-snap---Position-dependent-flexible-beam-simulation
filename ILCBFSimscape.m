@@ -23,7 +23,7 @@ Tend = t(end);
 %% system
 if true
     G = ss(ModelFlexibleBeamFirstPrinciple(POI)); % model for simulation
-    load FBcontroller_firstPrinciplesBeam2
+    load FBcontroller_firstPrinciplesBeam
 else
     load FBcontroller_09062021
 end
