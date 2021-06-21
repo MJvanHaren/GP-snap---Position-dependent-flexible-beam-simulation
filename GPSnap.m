@@ -4,7 +4,7 @@ SetPlotLatexStyle;
 %% constants
 l = 500; %mm
 delta = 10; % plz >1
-n = 5;
+n = 5; % preferably (must be) an uneven number so center will be identified
 n_s = 200;
 Ts = 1e-3;
 N_trial = 6;
