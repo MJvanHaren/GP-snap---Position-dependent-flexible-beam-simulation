@@ -29,7 +29,6 @@ Cm = C*Phi;
 %% iterating over modes and positions to determine Gy and Gz
 s = tf('s');
 G = (Cm(1)*Bm(1))/s^2;
-% G=0;
 n = length(Cm);
 zeta = [0.1 0.04];
 for r = 2:n
