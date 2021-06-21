@@ -30,7 +30,7 @@ Cm = C*Phi;
 s = tf('s');
 G = (Cm(1)*Bm(1))/s^2;
 n = length(Cm);
-zeta = [0.1 0.04];
+zeta = [0.071 0.03];
 for r = 2:n
     G = G+2*(Cm(r)*Bm(r))/(s^2+2*zeta(r-1)*wn(r-1)*s+wn(r-1)^2);
 end
