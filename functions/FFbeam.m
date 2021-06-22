@@ -152,7 +152,7 @@ for ii=1:length(betaN)
     end
 end
 XnxMAX=max(abs(Xnx(1,1:end)));
-Xnx=Xnx./XnxMAX;
+Xnx=Xnx;
 % Plot mode shapes are arbitrarily normalized to unity;
 disp('Note: first two mode shapes are not included are X0=const(translational)')
 disp('and X0=A(x-l/2) (rotational)')

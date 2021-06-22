@@ -85,5 +85,22 @@ for trial = 1:N_trial
     theta_jplus1 = (Q*theta_j(:,trial)+L*e_j);
     f_jplus1 = Psi*theta_jplus1;
 end
+if false
+   figure(2);clf;
+   subplot(121)
+   semilogy(history.eNorm,'s--','Markersize',12,'Linewidth',1.3); hold on;
+   xlabel('Trial Number [-]'); ylabel('$\|e\|_2$ [$m$]');
+   ylim([1.5e-5 7.5e-4]); xticks(1:6); xlim([0.7 6.3]);
+   subplot(122)
+   yyaxis left
+   plot(theta_j(1,:),'^--','Markersize',12,'Linewidth',1.3);
+   ylabel('Acceleration Parameter [$kg$]');
+   xlabel('Trial Number [-]');
+   ylim([-0.005 0.165])
+   yyaxis right
+   plot(theta_j(2,:),'o--','Markersize',12,'Linewidth',1.3);
+   ylabel('Snap Parameter [$kg/s^2$]'); 
+   xticks(1:6); xlim([0.7 6.3]); ylim([-0.1e-5 3.5e-5])
+end
 end
 

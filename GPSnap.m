@@ -1,4 +1,5 @@
-clear all; close all; clc;
+clear all; 
+close all; clc;
 addpath(genpath('functions'));
 SetPlotLatexStyle;
 %% constants
@@ -7,11 +8,11 @@ delta = 10; % plz >1
 n = 5; % preferably (must be) an uneven number so center will be identified
 n_s = 200;
 Ts = 1e-3;
-N_trial = 6;
+N_trial = 16;
 %% inputs
 X = round(linspace(delta,l-delta,n)'); % Training inputs
 X_s = linspace(0,l,n_s)'; % Test inputs (for visualization)
-Xtest = [30 110 180 248 380 445]'; % mm
+Xtest = [30 110 248 410 480]'; % mm
 ntest = length(Xtest);
 %% ref + basis
 [ty,ddy] = make4(5e-4,1e-3,1e-2,2.5e-1,2e1,Ts); % good choice: 5e-4,1e-3,1e-2,2.5e-1,2e1
@@ -19,7 +20,7 @@ ntest = length(Xtest);
 Psi = [a s];
 npsi = size(Psi,2);
 theta0 = zeros(npsi,1);
-if true
+if false
     figure
     subplot(2,3,1)
     plot(t,r);
@@ -67,8 +68,8 @@ f = [mu+2*sqrt(s2); flipdim(mu-2*sqrt(s2),1)];
 fill([X_s; flipdim(X_s,1)], f, [7 7 7]/8)
 hold on; plot(X_s, mu,'Linewidth',2); plot(X, Y, '+','Markersize',17,'Linewidth',1.3);
 
-xlabel('Sensor y-position [$mm$]');
-ylabel('Snap feedforward parameter [$kg/s^2$]')
+xlabel('Scheduling Variable $\rho$ [$mm$]');
+ylabel('Snap Parameter [$kg/s^2$]')
 
 %% estimate on new position
 
@@ -86,12 +87,10 @@ for i = 1:ntest
     [~,eConstant(:,i)] = ILCBFSimscape(Xtest(i),l,Ts,1,y(:,find(X==l/2)),r,Psi,t);
     eNormConstant(i) = norm(eConstant(:,i),2);
 end
-%% visualization
-figure(3);clf;
+%% visualizationfigure(3);clf;
 semilogy(Xtest,eNormGP,'s--','Markersize',15,'Linewidth',1.3)
 hold on
 semilogy(Xtest,eNormConstant,'^--','Markersize',15,'Linewidth',1.3)
 xlabel('Scheduling Variable $\rho$ [$mm$]');
 ylabel('$\|e\|_2$ [$m$]');
 legend('GP Snap Feefdorward','Position-Independent Feedforward');
-% ylim([3.8e-6 8.92e-6])
