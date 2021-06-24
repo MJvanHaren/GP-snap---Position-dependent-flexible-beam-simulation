@@ -87,7 +87,8 @@ for i = 1:ntest
     [~,eConstant(:,i)] = ILCBFSimscape(Xtest(i),l,Ts,1,y(:,find(X==l/2)),r,Psi,t);
     eNormConstant(i) = norm(eConstant(:,i),2);
 end
-%% visualizationfigure(3);clf;
+%% visualization
+figure(3);clf;
 semilogy(Xtest,eNormGP,'s--','Markersize',15,'Linewidth',1.3)
 hold on
 semilogy(Xtest,eNormConstant,'^--','Markersize',15,'Linewidth',1.3)
