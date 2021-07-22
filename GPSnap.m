@@ -8,11 +8,11 @@ delta = 10; % plz >1
 n = 5; % preferably (must be) an uneven number so center will be identified
 n_s = 200;
 Ts = 1e-3;
-N_trial = 16;
+N_trial = 7;
 %% inputs
 X = round(linspace(delta,l-delta,n)'); % Training inputs
 X_s = linspace(0,l,n_s)'; % Test inputs (for visualization)
-Xtest = [30 110 248 410 480]'; % mm
+Xtest = [30 110 248 387 470]'; % mm
 ntest = length(Xtest);
 %% ref + basis
 [ty,ddy] = make4(5e-4,1e-3,1e-2,2.5e-1,2e1,Ts); % good choice: 5e-4,1e-3,1e-2,2.5e-1,2e1
@@ -61,16 +61,17 @@ covfunc = @covSEiso;              % Squared Exponental covariance function
 likfunc = @likGauss;              % Gaussian likelihood
 hypGuess = struct('mean',[], 'cov', [5e0 log(mean(abs(Y)))], 'lik', log(1e-9));
 hypOpt = minimize(hypGuess, @gp, -100, @infGaussLik, meanfunc, covfunc, likfunc, X, Y); % optimize hyperparameters
-[mu, s2] = gp(hypOpt, @infGaussLik, meanfunc, covfunc, likfunc, X, Y, X_s);
+hypOpt =struct('mean',[], 'cov', [5e0 -10e0], 'lik', log(4e-7));
+[mu, s1,~,s2] = gp(hypOpt, @infGaussLik, meanfunc, covfunc, likfunc, X, Y, X_s);
 
 figure(2);clf;
 f = [mu+2*sqrt(s2); flipdim(mu-2*sqrt(s2),1)];
 fill([X_s; flipdim(X_s,1)], f, [7 7 7]/8)
 hold on; plot(X_s, mu,'Linewidth',2); plot(X, Y, '+','Markersize',17,'Linewidth',1.3);
 
-xlabel('Scheduling Variable $\rho$ [$mm$]');
+xlabel('Scheduling Variable $\bar{\rho}$ [$mm$]');
 ylabel('Snap Parameter [$kg/s^2$]')
-
+legend('Posterior Mean $\pm 2\sigma$','Posterior Mean','Training Data');
 %% estimate on new position
 
 [thetaSnapTest, ~] = gp(hypOpt, @infGaussLik, meanfunc, covfunc, likfunc, X, Y, Xtest);
@@ -86,12 +87,23 @@ for i = 1:ntest
     eNormGP(i) = norm(eGP(:,i),2);
     [~,eConstant(:,i)] = ILCBFSimscape(Xtest(i),l,Ts,1,y(:,find(X==l/2)),r,Psi,t);
     eNormConstant(i) = norm(eConstant(:,i),2);
+    [~,eAcc(:,i)] = ILCBFSimscape(Xtest(i),l,Ts,1,[y(1,find(X==l/2)); 0],r,Psi,t);
+    eNormAcc(i) = norm(eAcc(:,i),2);
 end
 %% visualization
 figure(3);clf;
 semilogy(Xtest,eNormGP,'s--','Markersize',15,'Linewidth',1.3)
 hold on
 semilogy(Xtest,eNormConstant,'^--','Markersize',15,'Linewidth',1.3)
-xlabel('Scheduling Variable $\rho$ [$mm$]');
+semilogy(Xtest,eNormAcc,'o--','Markersize',15,'Linewidth',1.3)
+
+xlabel('Scheduling Variable $\bar{\rho}$ [$mm$]');
 ylabel('$\|e\|_2$ [$m$]');
-legend('GP Snap Feefdorward','Position-Independent Feedforward');
+legend('GP Snap Feedforward','Position-Independent Snap Feedforward','Acceleration Feedforward');
+
+figure(4);clf
+plot(t,eGP(:,1)); hold on;
+plot(t,eConstant(:,1));
+plot(t,eAcc(:,1));
+xlabel('Time [s]');
+ylabel('Error [m]');
